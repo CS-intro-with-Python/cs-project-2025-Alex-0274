@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}ToDo - List{% endblock %}
+
+{% block content %}
+<div class="row g-3 align-items-end mb-3">
+  <div class="col-12 col-md-5">
+    <label class="form-label">Search</label>
+    <form class="d-flex gap-2" method="get" action="{{ url_for('main.index') }}">
+      <input class="form-control" name="q" value="{{ ui.q }}" placeholder="Find by title..." />
+      <input type="hidden" name="status" value="{{ ui.status }}">
+      <input type="hidden" name="sort" value="{{ ui.sort }}">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="col-12 col-md-4">
+    <label class="form-label">Filter</label>
+    <div class="btn-group w-100" role="group">
+      <a class="btn btn-outline-secondary {% if ui.status=='all' %}active{% endif %}"
+         href="{{ url_for('main.index', status='all', q=ui.q, sort=ui.sort) }}">All</a>
+      <a class="btn btn-outline-secondary {% if ui.status=='active' %}active{% endif %}"
+         href="{{ url_for('main.index', status='active', q=ui.q, sort=ui.sort) }}">Active</a>
+      <a class="btn btn-outline-secondary {% if ui.status=='done' %}active{% endif %}"
+         href="{{ url_for('main.index', status='done', q=ui.q, sort=ui.sort) }}">Done</a>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <label class="form-label">Sort</label>
+    <form method="get" action="{{ url_for('main.index') }}">
+      <input type="hidden" name="status" value="{{ ui.status }}">
+      <input type="hidden" name="q" value="{{ ui.q }}">
+      <select class="form-select" name="sort" onchange="this.form.submit()">
+        <option value="newest" {% if ui.sort=='newest' %}selected{% endif %}>Newest</option>
+        <option value="priority" {% if ui.sort=='priority' %}selected{% endif %}>Priority</option>
+        <option value="due" {% if ui.sort=='due' %}selected{% endif %}>Due date</option>
+      </select>
+    </form>
+  </div>
+</div>
+
+{% if items|length == 0 %}
+  <div class="alert alert-light border">
+    No tasks yet. Create the first one with <strong>+ New task</strong>.
+  </div>
+{% else %}
+  <div class="vstack gap-2">
+    {% for task in items %}
+      {% include "_task_card.html" %}
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

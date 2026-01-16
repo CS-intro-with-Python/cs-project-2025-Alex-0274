@@ -1,0 +1,16 @@
+.task-card {
+  border-radius: 14px;
+}
+
+.task-done .task-title {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.task-done .task-desc {
+  opacity: 0.7;
+}
+
+.navbar-brand {
+  letter-spacing: 0.2px;
+}
